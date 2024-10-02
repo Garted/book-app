@@ -6,8 +6,7 @@ function App() {
             <header className="app-header">
                 <h1>Book Library App</h1>
             </header>
-            <div>asdasd</div>
-            <div>asdasasdd</div>
+            <div>Test</div>
         </div>
     );
 }
