@@ -3,12 +3,13 @@ import {
     setTitleFilter,
     selectTitleFilter,
     resetFilter,
+    setAuthorFilter,
 } from '../../redux/slices/filterSlice';
 import './Filter.css';
 
 const Filter = () => {
     const dispatch = useDispatch();
-    const inputValue = useSelector(selectTitleFilter);
+    const { title, author } = useSelector(selectTitleFilter);
 
     return (
         <div className="app-block filter">
@@ -18,9 +19,17 @@ const Filter = () => {
                         onChange={(e) => {
                             dispatch(setTitleFilter(e.target.value));
                         }}
-                        value={inputValue}
+                        value={title}
                         type="text"
                         placeholder="Filter by title..."
+                    />
+                    <input
+                        onChange={(e) => {
+                            dispatch(setAuthorFilter(e.target.value));
+                        }}
+                        value={author}
+                        type="text"
+                        placeholder="Filter by author..."
                     />
                     <button
                         type="button"
