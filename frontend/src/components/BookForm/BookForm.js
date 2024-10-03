@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
+import createBookWithId from '../../utils/createBookWithId';
 import { addBook } from '../../redux/books/actionCreator';
 import booksData from '../../data/333. books.json';
 import './BookForm.css';
@@ -13,9 +13,7 @@ const BookForm = () => {
     const handleSumbit = (e) => {
         e.preventDefault();
         if (title && author) {
-            dispatch(
-                addBook({ title, author, isFavorite: false, id: uuidv4() })
-            );
+            dispatch(addBook(createBookWithId({ title, author })));
             setTitle('');
             setAuthor('');
         }
@@ -25,12 +23,7 @@ const BookForm = () => {
         //Easy to reading
         const randomIndex = Math.floor(Math.random() * booksData.length);
         const { year, ...otherData } = booksData[randomIndex];
-        const randomBookWithId = {
-            ...otherData,
-            isFavorite: false,
-            id: uuidv4(),
-        };
-        dispatch(addBook(randomBookWithId));
+        dispatch(addBook(createBookWithId(otherData)));
 
         //Hard to reading
         // dispatch(
