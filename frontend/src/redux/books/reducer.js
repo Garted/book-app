@@ -7,7 +7,7 @@ const reducer = (state = initialState, action) => {
         case ADD_BOOK:
             return [...state, action.payload];
         case DELETE_BOOK:
-            return state;
+            return state.filter((item) => item.id !== action.payload);
         case TOGGLE_FAVORITE:
             return state;
         default:

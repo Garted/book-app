@@ -4,8 +4,8 @@ export const addBook = (newBook) => {
     return { type: ADD_BOOK, payload: newBook };
 };
 
-export const deleteBook = () => {
-    return { type: DELETE_BOOK, payload: {} };
+export const deleteBook = (id) => {
+    return { type: DELETE_BOOK, payload: id };
 };
 
 export const toggleFavoite = () => {
