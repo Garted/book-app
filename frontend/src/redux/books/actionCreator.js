@@ -8,6 +8,6 @@ export const deleteBook = (id) => {
     return { type: DELETE_BOOK, payload: id };
 };
 
-export const toggleFavoite = () => {
-    return { type: TOGGLE_FAVORITE, payload: {} };
+export const toggleFavoite = (id) => {
+    return { type: TOGGLE_FAVORITE, payload: id };
 };

@@ -9,7 +9,11 @@ const reducer = (state = initialState, action) => {
         case DELETE_BOOK:
             return state.filter((item) => item.id !== action.payload);
         case TOGGLE_FAVORITE:
-            return state;
+            return state.map((item) =>
+                item.id === action.payload
+                    ? { ...item, isFavorite: !item.isFavorite }
+                    : item
+            );
         default:
             return state;
     }

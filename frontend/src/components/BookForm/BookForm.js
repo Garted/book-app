@@ -13,7 +13,9 @@ const BookForm = () => {
     const handleSumbit = (e) => {
         e.preventDefault();
         if (title && author) {
-            dispatch(addBook({ title, author, id: uuidv4() }));
+            dispatch(
+                addBook({ title, author, isFavorite: false, id: uuidv4() })
+            );
             setTitle('');
             setAuthor('');
         }
@@ -23,7 +25,11 @@ const BookForm = () => {
         //Easy to reading
         const randomIndex = Math.floor(Math.random() * booksData.length);
         const { year, ...otherData } = booksData[randomIndex];
-        const randomBookWithId = { ...otherData, id: uuidv4() };
+        const randomBookWithId = {
+            ...otherData,
+            isFavorite: false,
+            id: uuidv4(),
+        };
         dispatch(addBook(randomBookWithId));
 
         //Hard to reading
