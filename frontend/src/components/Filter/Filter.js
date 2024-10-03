@@ -4,13 +4,14 @@ import {
     selectTitleFilter,
     resetFilter,
     setAuthorFilter,
+    setCheckFilter,
 } from '../../redux/slices/filterSlice';
 import './Filter.css';
 
 const Filter = () => {
     const dispatch = useDispatch();
-    const { title, author } = useSelector(selectTitleFilter);
-
+    const { title, author, onlyFavorite } = useSelector(selectTitleFilter);
+    console.log(onlyFavorite);
     return (
         <div className="app-block filter">
             <div className="filter-group">
@@ -31,6 +32,17 @@ const Filter = () => {
                         type="text"
                         placeholder="Filter by author..."
                     />
+                    <label>
+                        <input
+                            onChange={() => {
+                                dispatch(setCheckFilter());
+                            }}
+                            checked={onlyFavorite}
+                            type="checkbox"
+                        />
+                        only favorite
+                    </label>
+
                     <button
                         type="button"
                         onClick={() => {

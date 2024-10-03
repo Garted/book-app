@@ -8,7 +8,7 @@ import './BookList.css';
 const BookList = () => {
     const dispatch = useDispatch();
     const books = useSelector((state) => state.books);
-    const { title, author } = useSelector(selectTitleFilter);
+    const { title, author, onlyFavorite } = useSelector(selectTitleFilter);
 
     //Filter in component
     // const filteredBooks = books.filter((book) => {
@@ -19,7 +19,12 @@ const BookList = () => {
     // });
 
     //import util function for filter books
-    const filteredBooks = filterByTitleAndAuthor(books, title, author);
+    const filteredBooks = filterByTitleAndAuthor(
+        books,
+        title,
+        author,
+        onlyFavorite
+    );
 
     return (
         <div className="app-block book-list">
