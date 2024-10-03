@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import './BookForm.css';
-
-import { addBook } from '../../redux/books/actionCreator';
 import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import { addBook } from '../../redux/books/actionCreator';
+import './BookForm.css';
 
 const BookForm = () => {
     const [title, setTitle] = useState('');
@@ -12,7 +12,7 @@ const BookForm = () => {
     const handleSumbit = (e) => {
         e.preventDefault();
         if (title && author) {
-            dispatch(addBook({ title, author }));
+            dispatch(addBook({ title, author, id: uuidv4() }));
             setTitle('');
             setAuthor('');
         }
