@@ -13,9 +13,6 @@ export const fetchUserData = createAsyncThunk(
             return res.data;
         } catch (e) {
             dispatch(setError(e.message));
-            console.log(e.message);
-
-            // dispatchEvent();
         }
     }
 );
@@ -55,7 +52,6 @@ const booksSlice = createSlice({
                         createBookWithId(action.payload, 'serverApi'),
                     ];
                 } else {
-                    console.log('er');
                     return state;
                 }
             })
