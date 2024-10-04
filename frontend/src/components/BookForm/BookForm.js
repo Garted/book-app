@@ -4,6 +4,7 @@ import createBookWithId from '../../utils/createBookWithId';
 import { addBook } from '../../redux/slices/booksSlice';
 import booksData from '../../data/333. books.json';
 import './BookForm.css';
+import { fetchUserData } from '../../redux/slices/booksSlice';
 
 const BookForm = () => {
     const [title, setTitle] = useState('');
@@ -54,7 +55,14 @@ const BookForm = () => {
                 />
 
                 <button type="submit">Add Book</button>
-                <button type="submit">API</button>
+                <button
+                    onClick={() => {
+                        dispatch(fetchUserData());
+                    }}
+                    type="button"
+                >
+                    API
+                </button>
                 <button onClick={handleAddRandomBook} type="button">
                     Add Random
                 </button>
