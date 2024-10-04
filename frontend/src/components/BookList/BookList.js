@@ -3,6 +3,7 @@ import { BsBookmarkStarFill, BsBookmarkStar } from 'react-icons/bs';
 import { deleteBook, toggleFavoite } from '../../redux/books/actionCreator';
 import { selectTitleFilter } from '../../redux/slices/filterSlice';
 import filterByTitleAndAuthor from '../../utils/filterByTitleAndAuthor';
+import highlightMatch from '../../utils/highlightMatch';
 import './BookList.css';
 
 const BookList = () => {
@@ -36,8 +37,14 @@ const BookList = () => {
                     {filteredBooks.map((book, index) => (
                         <li key={book.id}>
                             <div className="book-info">
-                                {++index}. {book.title} by{' '}
-                                <strong>{book.author}</strong>
+                                {++index}.{' '}
+                                <span>{highlightMatch(book.title, title)}</span>{' '}
+                                by{' '}
+                                <strong>
+                                    <span>
+                                        {highlightMatch(book.author, author)}
+                                    </span>
+                                </strong>
                             </div>
                             <span
                                 onClick={() => {
@@ -68,3 +75,9 @@ const BookList = () => {
 };
 
 export default BookList;
+
+const str = 'data';
+const find = 'at';
+const result = str.replace(new RegExp(find, 'g'), `<strong>{find}<strong>`);
+
+console.log(result);

@@ -11,7 +11,7 @@ import './Filter.css';
 const Filter = () => {
     const dispatch = useDispatch();
     const { title, author, onlyFavorite } = useSelector(selectTitleFilter);
-    console.log(onlyFavorite);
+
     return (
         <div className="app-block filter">
             <div className="filter-group">
