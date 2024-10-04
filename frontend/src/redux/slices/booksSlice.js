@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
+import createBookWithId from '../../utils/createBookWithId';
+import axios from 'axios';
 const initialState = [];
 
 export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async () => {
-        const response = await fetch(`http://localhost:4000/random-book`);
-        const json = response.json();
-        return json;
+        const res = await axios.get(`http://localhost:4000/random-book`);
+        return res.data;
     }
 );
 
@@ -33,15 +33,23 @@ const booksSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUserData.pending, (state) => {
+            .addCase(fetchUserData.pending, () => {
                 console.log('loading');
             })
             .addCase(fetchUserData.fulfilled, (state, action) => {
                 console.log('success');
-                return [...state, action.payload];
+                if (action.payload?.author && action.payload?.title) {
+                    return [
+                        ...state,
+                        createBookWithId(action.payload, 'serverApi'),
+                    ];
+                } else {
+                    return state;
+                }
             })
-            .addCase(fetchUserData.rejected, (state, action) => {
+            .addCase(fetchUserData.rejected, (state) => {
                 console.log('err');
+                return state;
             });
     },
 });
