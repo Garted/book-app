@@ -1,16 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import createBookWithId from '../../utils/createBookWithId';
 import axios from 'axios';
-const initialState = [];
+import createBookWithId from '../../utils/createBookWithId';
 
+import { setError } from './errorSlice';
+
+const initialState = [];
 export const fetchUserData = createAsyncThunk(
-    'user/fetchUserData',
-    async () => {
-        const res = await axios.get(`http://localhost:4000/random-book`);
-        return res.data;
+    'books/fetchUserData',
+    async (_, { dispatch }) => {
+        try {
+            const res = await axios.get(`http://localhost:4000/ranom-book`);
+            return res.data;
+        } catch (e) {
+            dispatch(setError(e.message));
+            console.log(e.message);
+
+            // dispatchEvent();
+        }
     }
 );
-
+const some = createAsyncThunk('book/some', () => {
+    return 1;
+});
 const booksSlice = createSlice({
     name: 'books',
     initialState,
@@ -37,20 +48,26 @@ const booksSlice = createSlice({
                 console.log('loading');
             })
             .addCase(fetchUserData.fulfilled, (state, action) => {
-                console.log('success');
                 if (action.payload?.author && action.payload?.title) {
+                    console.log('success');
                     return [
                         ...state,
                         createBookWithId(action.payload, 'serverApi'),
                     ];
                 } else {
+                    console.log('er');
                     return state;
                 }
             })
             .addCase(fetchUserData.rejected, (state) => {
                 console.log('err');
+
                 return state;
             });
+
+        builder.addCase(some.rejected, (state, action) => {
+            console.log('err');
+        });
     },
 });
 
