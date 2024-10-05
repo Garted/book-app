@@ -8,7 +8,7 @@ import './BookList.css';
 
 const BookList = () => {
     const dispatch = useDispatch();
-    const books = useSelector((state) => state.books);
+    const books = useSelector((state) => state.books.books);
     const { title, author, onlyFavorite } = useSelector(selectTitleFilter);
 
     //Filter in component

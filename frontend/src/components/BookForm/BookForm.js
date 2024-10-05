@@ -1,60 +1,46 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaSpinner } from 'react-icons/fa';
-
-import createBookWithId from '../../utils/createBookWithId';
-import { addBook } from '../../redux/slices/booksSlice';
 import booksData from '../../data/333. books.json';
 import './BookForm.css';
-import { fetchUserData } from '../../redux/slices/booksSlice';
-import { setError } from '../../redux/slices/errorSlice';
+import {
+    handleAddRandomBook,
+    handleAddBook,
+    handleLoadBookFromApi,
+} from '../../utils/handleLoadBook';
 
 const BookForm = () => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
-
-    const [isLoading, setIsLoading] = useState(false);
+    const isLoad = useSelector((state) => state.books.isLoading);
     const dispatch = useDispatch();
-    const handleSumbit = (e) => {
-        e.preventDefault();
-        if (title && author) {
-            dispatch(addBook(createBookWithId({ title, author }, 'handle')));
-            setTitle('');
-            setAuthor('');
-        } else {
-            dispatch(setError('Fill field'));
-        }
-    };
-
-    const handleAddRandomBook = () => {
-        //Easy to reading
-        const randomIndex = Math.floor(Math.random() * booksData.length);
-        const { year, ...otherData } = booksData[randomIndex];
-        dispatch(addBook(createBookWithId(otherData, 'random')));
-        //Hard to reading
-        // dispatch(
-        //     addBook({
-        //         ...booksData[Math.floor(Math.random() * booksData.length)],
-        //         id: uuidv4(),
-        //     })
-        // );
-    };
-
-    const handleLoadBookFromApi = async () => {
-        try {
-            setIsLoading(true);
-            await dispatch(
-                fetchUserData(`http://localhost:4000/random-book-delayed`)
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <div className="app-block book-form">
             <h2>Add a New Book</h2>
-            <form onSubmit={handleSumbit}>
+            <form
+                onSubmit={(e) => {
+                    /**
+                     * Обработчик для добавления вручную.
+                     * @param {Event} e - Событие submit.
+                     * @param {function} dispatch - Redux dispatch функция.
+                     * @param {string} "handle" - Способ добавления (например, 'handle').
+                     * @param {string} title - Заголовок книги.
+                     * @param {string} author - Автор книги.
+                     * @param {function} setTitle - Функция для установки заголовка.
+                     * @param {function} setAuthor - Функция для установки автора.
+                     */
+                    handleAddBook(
+                        e,
+                        dispatch,
+                        'handle',
+                        title,
+                        author,
+                        setTitle,
+                        setAuthor
+                    );
+                }}
+            >
                 <label htmlFor="title">Title:</label>
                 <input
                     onChange={(e) => setTitle(e.target.value)}
@@ -74,19 +60,27 @@ const BookForm = () => {
 
                 <button
                     style={
-                        isLoading
+                        isLoad
                             ? {
                                   backgroundColor: 'grey',
                               }
                             : null
                     }
                     onClick={() => {
-                        handleLoadBookFromApi();
+                        /**
+                         * Обработчик для добавления через API.
+                         * @param {Event} "url" - "адрес запроса"
+                         * @param {function} dispatch - Redux dispatch функция.
+                         */
+                        handleLoadBookFromApi(
+                            dispatch,
+                            'http://localhost:4000/random-book-delayed'
+                        );
                     }}
                     type="button"
-                    disabled={isLoading}
+                    disabled={isLoad}
                 >
-                    {isLoading ? (
+                    {isLoad ? (
                         <>
                             <span>Loading Book</span>
                             <FaSpinner className="spinner" />
@@ -95,7 +89,18 @@ const BookForm = () => {
                         'API'
                     )}
                 </button>
-                <button onClick={handleAddRandomBook} type="button">
+                <button
+                    onClick={() => {
+                        /**
+                         * Обработчик для добавления книги из файла json.
+                         * @param {Event} bookData - json файл с книгами
+                         * @param {function} dispatch - Redux dispatch функция.
+                         * @param {function} 'random' - Способ добавления.
+                         */
+                        handleAddRandomBook(booksData, dispatch, 'random');
+                    }}
+                    type="button"
+                >
                     Add Random
                 </button>
             </form>

@@ -3,7 +3,10 @@ import axios from 'axios';
 import createBookWithId from '../../utils/createBookWithId';
 import { setError } from './errorSlice';
 
-const initialState = [];
+const initialState = {
+    books: [],
+    isLoading: false,
+};
 
 export const fetchUserData = createAsyncThunk(
     'books/fetchUserData',
@@ -25,10 +28,10 @@ const booksSlice = createSlice({
 
     reducers: {
         addBook: (state, action) => {
-            return [...state, action.payload];
+            return { ...state, books: [...state.books, action.payload] };
         },
         toggleFavorite: (state, action) => {
-            return state.map((item) => {
+            return state.books.map((item) => {
                 if (item.id === action.payload) {
                     return { ...item, isFavorite: !item.isFavorite };
                 }
@@ -36,46 +39,32 @@ const booksSlice = createSlice({
             });
         },
         deleteBook: (state, action) => {
-            return state.filter((item) => item.id !== action.payload);
+            return state.books.filter((item) => item.id !== action.payload);
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUserData.pending, () => {
-                //add status
-                console.log('pend');
+            .addCase(fetchUserData.pending, (state) => {
+                return { ...state, isLoading: true };
             })
             .addCase(fetchUserData.fulfilled, (state, action) => {
-                console.log('full');
-                //remove status and add full
                 if (action.payload?.author && action.payload?.title) {
-                    return [
+                    return {
                         ...state,
-                        createBookWithId(action.payload, 'serverApi'),
-                    ];
+                        isLoading: false,
+                        books: [
+                            ...state.books,
+                            createBookWithId(action.payload, 'serverApi'),
+                        ],
+                    };
                 } else {
-                    return state;
+                    return { ...state, isLoading: false };
                 }
             })
             .addCase(fetchUserData.rejected, (state) => {
-                //remove status and add reject
-                console.log('err');
+                return { ...state, isLoading: false };
             });
     },
-
-    // extraReducers: {
-    //     [fetchUserData.fulfilled] : (state, action) => {
-    //         console.log('full');
-    //         if (action.payload?.author && action.payload?.title) {
-    //             return [
-    //                 ...state,
-    //                 createBookWithId(action.payload, 'serverApi'),
-    //             ];
-    //         } else {
-    //             return state;
-    //         }
-    //     },
-    // },
 });
 
 export const { addBook, toggleFavorite, deleteBook } = booksSlice.actions;
