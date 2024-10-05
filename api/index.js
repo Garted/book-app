@@ -1,14 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const bookData = require('./data/books.json');
-
 const app = express();
+const bookData = require('./data/books.json');
+const generateBook = require('./utils.js');
+
 app.use(cors());
 
 app.get('/random-book', (req, res) => {
-    const randomIndex = Math.floor(Math.random() * bookData.length);
-    const randomBook = bookData[randomIndex];
-    res.json(randomBook);
+    res.json(generateBook(bookData));
+});
+
+app.get('/random-book-delayed', (req, res) => {
+    setTimeout(() => {
+        res.json(generateBook(bookData));
+    }, 1000);
 });
 
 const port = process.env.PORT || 4000;

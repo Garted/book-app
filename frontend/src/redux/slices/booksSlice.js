@@ -1,24 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import createBookWithId from '../../utils/createBookWithId';
-
 import { setError } from './errorSlice';
 
 const initialState = [];
+
 export const fetchUserData = createAsyncThunk(
     'books/fetchUserData',
-    async (_, { dispatch }) => {
+    async (url, thunkAPI) => {
         try {
-            const res = await axios.get(`http://localhost:4000/random-book`);
+            const res = await axios.get(url);
             return res.data;
         } catch (e) {
-            dispatch(setError('Fail to fetch'));
+            console.log(e.message);
+            thunkAPI.dispatch(setError('Fail to fetch'));
+            throw e;
         }
     }
 );
-const some = createAsyncThunk('book/some', () => {
-    return 1;
-});
+
 const booksSlice = createSlice({
     name: 'books',
     initialState,
@@ -42,11 +42,13 @@ const booksSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserData.pending, () => {
-                console.log('loading');
+                //add status
+                console.log('pend');
             })
             .addCase(fetchUserData.fulfilled, (state, action) => {
+                console.log('full');
+                //remove status and add full
                 if (action.payload?.author && action.payload?.title) {
-                    console.log('success');
                     return [
                         ...state,
                         createBookWithId(action.payload, 'serverApi'),
@@ -56,15 +58,24 @@ const booksSlice = createSlice({
                 }
             })
             .addCase(fetchUserData.rejected, (state) => {
+                //remove status and add reject
                 console.log('err');
-
-                return state;
             });
-
-        builder.addCase(some.rejected, (state, action) => {
-            console.log('err');
-        });
     },
+
+    // extraReducers: {
+    //     [fetchUserData.fulfilled] : (state, action) => {
+    //         console.log('full');
+    //         if (action.payload?.author && action.payload?.title) {
+    //             return [
+    //                 ...state,
+    //                 createBookWithId(action.payload, 'serverApi'),
+    //             ];
+    //         } else {
+    //             return state;
+    //         }
+    //     },
+    // },
 });
 
 export const { addBook, toggleFavorite, deleteBook } = booksSlice.actions;
