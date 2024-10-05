@@ -9,10 +9,10 @@ export const fetchUserData = createAsyncThunk(
     'books/fetchUserData',
     async (_, { dispatch }) => {
         try {
-            const res = await axios.get(`http://localhost:4000/ranom-book`);
+            const res = await axios.get(`http://localhost:4000/random-book`);
             return res.data;
         } catch (e) {
-            dispatch(setError(e.message));
+            dispatch(setError('Fail to fetch'));
         }
     }
 );
