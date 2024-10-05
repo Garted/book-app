@@ -17,7 +17,10 @@ export const fetchUserData = createAsyncThunk(
         } catch (e) {
             console.log(e.message);
             thunkAPI.dispatch(setError('Fail to fetch'));
-            throw e;
+            //Option 1
+            return thunkAPI.rejectWithValue(e);
+            //Option 2
+            // throw e;
         }
     }
 );
@@ -30,16 +33,21 @@ const booksSlice = createSlice({
         addBook: (state, action) => {
             return { ...state, books: [...state.books, action.payload] };
         },
+
         toggleFavorite: (state, action) => {
-            return state.books.map((item) => {
+            state.books.forEach((item) => {
                 if (item.id === action.payload) {
-                    return { ...item, isFavorite: !item.isFavorite };
+                    item.isFavorite = !item.isFavorite;
+                } else {
+                    return state;
                 }
-                return item;
             });
         },
         deleteBook: (state, action) => {
-            return state.books.filter((item) => item.id !== action.payload);
+            return {
+                ...state,
+                books: state.books.filter((item) => item.id !== action.payload),
+            };
         },
     },
     extraReducers: (builder) => {
@@ -48,7 +56,7 @@ const booksSlice = createSlice({
                 return { ...state, isLoading: true };
             })
             .addCase(fetchUserData.fulfilled, (state, action) => {
-                if (action.payload?.author && action.payload?.title) {
+                if (action?.payload?.author && action?.payload?.title) {
                     return {
                         ...state,
                         isLoading: false,
@@ -62,7 +70,7 @@ const booksSlice = createSlice({
                 }
             })
             .addCase(fetchUserData.rejected, (state) => {
-                return { ...state, isLoading: false };
+                state.isLoading = false;
             });
     },
 });

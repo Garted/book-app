@@ -9,17 +9,9 @@ import './BookList.css';
 const BookList = () => {
     const dispatch = useDispatch();
     const books = useSelector((state) => state.books.books);
+    console.log(books);
     const { title, author, onlyFavorite } = useSelector(selectTitleFilter);
 
-    //Filter in component
-    // const filteredBooks = books.filter((book) => {
-    //     return (
-    //         book.title.toLowerCase().includes(title.toLowerCase()) &&
-    //         book.author.toLowerCase().includes(author.toLowerCase())
-    //     );
-    // });
-
-    //import util function for filter books
     const filteredBooks = filterByTitleAndAuthor(
         books,
         title,

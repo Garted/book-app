@@ -20,6 +20,6 @@ export const handleAddRandomBook = (book, dis, how) => {
     dis(addBook(createBookWithId(otherData, how)));
 };
 
-export const handleLoadBookFromApi = async (dis, url) => {
-    await dis(fetchUserData(url));
+export const handleLoadBookFromApi = (dis, url) => {
+    dis(fetchUserData(url));
 };
